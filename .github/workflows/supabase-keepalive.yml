@@ -1,12 +1,9 @@
 name: Supabase Keep-Alive
 
-# Pings the Supabase REST API twice a week so the project never hits
-# Supabase's 7-day inactivity threshold and gets auto-paused.
-
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '0 3 * * 0,3'   # Sunday & Wednesday, 03:00 UTC (~06:00 Istanbul time)
-  workflow_dispatch:         # lets you trigger it manually from the Actions tab too
+    - cron: '0 3 * * 0,3'
 
 jobs:
   ping:
@@ -15,6 +12,5 @@ jobs:
       - name: Ping Supabase REST API
         run: |
           curl -s -o /dev/null -w "Supabase ping -> HTTP %{http_code}\n" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+            "${{ secrets.SUPABASE_URL }}/rest/v1/keepalive" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}"
